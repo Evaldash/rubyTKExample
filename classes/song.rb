@@ -1,6 +1,10 @@
 class Song
    attr_reader :name, :artist, :year, :genre, :band, :popular, :country, :duration, :album, :loudness, :points
-	def initialize(name, artist, year, genre, band, popular, country, duration, album, loudness)
+   def initialize()
+      @points = 0
+   end
+
+   def addAllDetails(name, artist, year, genre, band, popular, country, duration, album, loudness)
 		@name = name
 		@artist = artist
 		@year = year
@@ -11,9 +15,15 @@ class Song
 		@duration = duration
 		@album = album
       @loudness = loudness
-
-		@points = 0
 	end
+
+   def hasAllDetails()
+      if (@name == nil || @artist == nil || @year == nil || @genre == nil || @band == nil || @popular == nil || @country == nil || @duration == nil || @album == nil || @loudness == nil)
+         return false
+      else
+         return true
+      end
+   end
 
    def [](var_name)
       case var_name

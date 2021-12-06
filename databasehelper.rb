@@ -1,7 +1,7 @@
 require 'sqlite3'
 
 class DatabaseHelper
-    $db = SQLite3::Database.open 'myDatabase.db'
+    $db
 
     def getSongsFromDB()
         songs = []
@@ -21,7 +21,10 @@ class DatabaseHelper
             release_type = row[8]
             loudness = row[9]
 
-            songs << Song.new(name, artist, year, genre, band, popular, country, duration, release_type, loudness)
+            song = Song.new()
+            song.addAllDetails(name, artist, year, genre, band, popular, country, duration, release_type, loudness)
+
+            songs << song
         end
         
         return songs
@@ -41,16 +44,55 @@ class DatabaseHelper
         return distinct_items
     end
 
-    def addSongToDB()
+    def addSongToDB(song)
+        if (!song.hasAllDetails)
+            return "Song is missing details."
+        end
 
+        query = "INSERT OR REPLACE INTO Songs (Name, Artist, Year, Genre, Band, Popular, Country, Duration, Album, Loudness)"
+        query += "VALUES ('"
+        query += song["Name"]
+        query += "', '"
+        query += song["Artist"]
+        query += "', '"
+        query += song["Year"]
+        query += "', '"
+        query += song["Genre"]
+        query += "', "
+        query += song["Band?"]
+        query += ", "
+        query += song["Popular?"]
+        query += ", '"
+        query += song["Country"]
+        query += "', '"
+        query += song["Duration"]
+        query += "', '"
+        query += song["Album"]
+        query += "', '"
+        query += song["Loudness"]
+        query += "');"
+
+        $db.execute(query)
+        rescue SQLite3::Exception => e 
+            puts "Exception occurred"
+            puts e
+        ensure
+            $db.close if $db
     end
 
     def initialize()
-        $db.execute "CREATE TABLE IF NOT EXISTS Songs(Name TEXT, Artist TEXT, Year int, Genre TEXT, Band bool, Popular bool, Country TEXT, Duration float, Album TEXT, Loudness int)"
+        $db = SQLite3::Database.open 'myDatabase2.db'
+        $db.execute "CREATE TABLE IF NOT EXISTS Songs(
+            Name TEXT,
+            Artist TEXT,
+            Year int,
+            Genre TEXT,
+            Band bool,
+            Popular bool,
+            Country TEXT,
+            Duration float,
+            Album TEXT,
+            Loudness int,
+            CONSTRAINT unq UNIQUE (Name, Artist))"
     end
-
-
-
-    #db.execute "INSERT INTO Songs (Name, Artist, Year, Genre, Band, Popular, Country, Duration, Album, Loudness)
-    #VALUES ('Happier Than Ever', 'Billie Eilish', 2021, 'Pop', 0, 1, 'USA', 5.15, 'Single', 2);"
 end

@@ -199,16 +199,12 @@ end
             text (i+1).to_s + '.' + sorted_songs[i].name + " - " + sorted_songs[i].artist
             grid(row: i+9, column: 0, columnspan: 3)
         end
-    
     }
-
-
  end
 
  def score_songs(songs, params)
     songs.each {|song|
        if (song["Artist"] == params['fav_author']) then song.add_point() end
-
        if (song["Genre"] == params['fav_genre']) then song.add_point() end
        if (song["Country"] == params['fav_country'] ) then song.add_point() end
        if (song["Popular?"] == params['likes_popular']) then song.add_point() end
