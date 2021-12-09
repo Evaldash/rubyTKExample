@@ -5,6 +5,8 @@ require_relative 'views/all_songs'
 require_relative 'views/top3_form'
 require_relative 'views/add_song'
 
+$dbHelper = DatabaseHelper.new()
+
 #GUI dalis
 root = TkRoot.new
 root.title = "Dainų registras"
@@ -16,8 +18,18 @@ n = Tk::Tile::Notebook.new(root)do
    place('height' => 800, 'width' => 1500, 'x' => 10, 'y' => 10)
 end
 
-showFirstTab(n)
-showSecondTab(n)
-showThirdTab(n)
+f1 = TkFrame.new(n)
+n.add f1, :text => 'All songs'
+
+f2 = TkFrame.new(n)
+n.add f2, :text => 'TOP 3 form'
+
+#Third tab: add song
+f3 = TkFrame.new(n)
+n.add f3, :text => '+ Add song'
+
+showFirstTab(f1)
+showSecondTab(f2)
+showThirdTab(f3)
 
 Tk.mainloop

@@ -1,17 +1,11 @@
-def showSecondTab(n)
-    db = DatabaseHelper.new()
+def showSecondTab(f2)
     songs = []
-    songs = db.getSongsFromDB()
+    songs = $dbHelper.getSongsFromDB()
     params = {}
 
-    distinct_artists = db.getDistinctSpecified('Artist')
-    distinct_genres = db.getDistinctSpecified('Genre')
-    distinct_countries = db.getDistinctSpecified('Country')
-
-    #Top 3 form, Second tab
-    f2 = TkFrame.new(n)
-    n.add f2, :text => 'TOP 3 form'
-
+    distinct_artists = $dbHelper.getDistinctSpecified('Artist')
+    distinct_genres = $dbHelper.getDistinctSpecified('Genre')
+    distinct_countries = $dbHelper.getDistinctSpecified('Country')
 
     TkLabel.new(f2) do
         text 'Choose your favourite artist.'
@@ -22,8 +16,6 @@ def showSecondTab(n)
         grid(row: 0, column: 1, columnspan: 1)
     end
 
-
-
     TkLabel.new(f2) do
         text 'Choose your favourite music genre.'
         grid(row: 1, column: 0, columnspan: 1, sticky: 'W')
@@ -32,8 +24,6 @@ def showSecondTab(n)
         values distinct_genres
         grid(row: 1, column: 1, columnspan: 1)
     end
-
-
 
     TkLabel.new(f2) do
         text 'Choose a country'
@@ -44,12 +34,13 @@ def showSecondTab(n)
         grid(row: 2, column: 1, columnspan: 1)
     end
 
-
-
     $likes_older = TkVariable.new
     $likes_popular = TkVariable.new
     $likes_loud = TkVariable.new
     $likes_band = TkVariable.new
+
+    $minutes = TkVariable.new
+    $seconds = TkVariable.new
 
     TkLabel.new(f2) do
         text 'Do you prefer older songs, or newer ones?'
@@ -89,8 +80,6 @@ def showSecondTab(n)
         grid(row: 4, column: 2, columnspan: 1)
     end
 
-
-
     TkLabel.new(f2) do
         text 'Do you prefer band songs, or single artist ones?'
         grid(row: 5, column: 0, columnspan: 1, sticky: 'W')
@@ -110,8 +99,6 @@ def showSecondTab(n)
         grid(row: 5, column: 2, columnspan: 1)
     end
 
-
-
     TkLabel.new(f2) do
         text 'Do you prefer loud, or quiet songs?'
         grid(row: 6, column: 0, columnspan: 1, sticky: 'W')
@@ -130,8 +117,6 @@ def showSecondTab(n)
         tristatevalue 0
         grid(row: 6, column: 2, columnspan: 1)
     end
-
-
 
     TkLabel.new(f2) do
         text 'Set your perfect song length.'
@@ -162,8 +147,6 @@ def showSecondTab(n)
         grid(row: 7, column: 13, columnspan: 1)
     end
 
-
-
     TkButton.new(f2) do
         text 'Show me my Top 3'
         command (proc {showTop3(songs, f2)})
@@ -171,32 +154,86 @@ def showSecondTab(n)
     end
 
 
+
+    $first_place_field = TkLabel.new(f2) do
+        grid(row: 9, column: 0, columnspan: 5)
+    end
+
+    $second_place_field = TkLabel.new(f2) do
+        grid(row: 10, column: 0, columnspan: 5)
+    end
+
+    $third_place_field = TkLabel.new(f2) do
+        grid(row: 11, column: 0, columnspan: 5)
+    end
+
+end
+
+private def showErrorPopup(msg)
+    errorbox = Tk.messageBox(
+        'type'    => "ok",  
+        'icon'    => "error", 
+        'title'   => "Error",
+        'message' => msg
+      )
 end
 
  def showTop3(songs, f2)
     params = Hash.new { |hash, key| hash[key] = Array.new }
+    
     params['fav_author'] = $fav_author_field.value.to_s
+    if (params['fav_author'] == '' )
+        showErrorPopup("Please select an author.")
+        return
+    end
+
     params['fav_genre'] = $fav_genre_field.value.to_s
+    if (params['fav_genre'] == '' )
+        showErrorPopup("Please select a genre.")
+        return
+    end
+
     params['fav_country'] = $fav_country_field.value.to_s
+    if (params['fav_country'] == '' )
+        showErrorPopup("Please select a country.")
+        return
+    end
     
     params['likes_popular'] = $likes_popular
+    if (params['likes_popular'] == nil)
+        showErrorPopup("Please select whether you like popular songs.")
+        return
+    end
+
     params['likes_older'] = $likes_older
+    if (params['likes_older'] == nil)
+        showErrorPopup("Please select whether you like older songs.")
+        return
+    end
+
     params['likes_loud'] = $likes_loud
+    if (params['likes_loud'] == nil)
+        showErrorPopup("Please select whether you like loud songs.")
+        return
+    end
+
     params['likes_band'] = $likes_band
+    if (params['likes_band'] == nil)
+        showErrorPopup("Please select whether you like band, or single artist songs.")
+        return
+    end
 
     params['prefered_length'] = $minutes.to_s + "." + $seconds.to_s
- 
-    score_songs(songs, params)
+    
+    temp_songs = Marshal.load( Marshal.dump(songs) )
+    score_songs(temp_songs, params)
 
     descending  = -1
-    sorted_songs = songs.sort_by {|song| song["Points"] * descending}
+    sorted_songs = temp_songs.sort_by {|song| song["Points"] * descending}
 
-    3.times {|i|
-        TkLabel.new(f2) do
-            text (i+1).to_s + '.' + sorted_songs[i].name + " - " + sorted_songs[i].artist
-            grid(row: i+9, column: 0, columnspan: 3)
-        end
-    }
+    $first_place_field['text'] = '1. ' + sorted_songs[0]["Name"] + ' - ' + sorted_songs[0]["Artist"]
+    $second_place_field['text'] = '2. ' + sorted_songs[1]["Name"] + ' - ' + sorted_songs[1]["Artist"]
+    $third_place_field['text'] = '3. ' + sorted_songs[2]["Name"] + ' - ' + sorted_songs[2]["Artist"]
  end
 
  def score_songs(songs, params)
@@ -213,9 +250,9 @@ end
        if (params['likes_older']=="true" && song["Year"] <=2000) then song.add_point()
        elsif (params['likes_older']=="false" && song["Year"] >=2000) then song.add_point() end   
        
-       @minute_before = song["Duration"]-1
-       @minute_after = song["Duration"]+1
+       minute_before = song["Duration"]-1
+       minute_after = song["Duration"]+1
  
-       if ((@minute_before...@minute_after).include? params['prefered_length'].to_f) then song.add_point() end            
+       if ((minute_before...minute_after).include? params['prefered_length'].to_f) then song.add_point() end            
     }
  end

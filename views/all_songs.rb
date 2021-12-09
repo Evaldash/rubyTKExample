@@ -1,10 +1,8 @@
-def showFirstTab(n)
-    db = DatabaseHelper.new()
+def showFirstTab(f1)
     songs = []
-    songs = db.getSongsFromDB()
+    songs = $dbHelper.getSongsFromDB()
     
-    f1 = TkFrame.new(n)
-    n.add f1, :text => 'All songs'
+    fields = []
 
     # Display all songs, first tab
     column_names = ["Name", "Artist", "Year", "Genre", "Band?", "Popular?", "Country", "Duration", "Album", "Loudness"]
@@ -20,10 +18,11 @@ def showFirstTab(n)
 
     songs.each_with_index do |song, s_index|
         column_names.each_with_index do |column_name, c_index|
-            TkLabel.new(f1) do
+            fields << TkLabel.new(f1) do
                 text song[column_name]
                 height 2
                 width 20
+                relief "ridge"
                 grid(row: s_index+1, column: c_index, columnspan: 1)
             end
         end
@@ -31,12 +30,14 @@ def showFirstTab(n)
 
     TkButton.new(f1) do
         text 'Refresh'
-        command {refreshAllSongs()}
+        command {refreshAllSongs(fields)}
         grid(row: songs.count+1, column: 0, columnspan: 1)
     end
 
 end
 
-def refreshAllSongs()
-
+def refreshAllSongs(fields)
+    fields.each do |field|
+        field.destroy
+    end
 end

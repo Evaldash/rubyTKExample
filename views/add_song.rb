@@ -1,90 +1,87 @@
-def showThirdTab(n)
-    #Third tab: add song
-    $f3 = TkFrame.new(n)
-    n.add $f3, :text => '+ Add song'
+def showThirdTab(f3)
     fields = {}
 
-    TkLabel.new($f3) do
+    TkLabel.new(f3) do
         text 'Name'
         grid(row:0, column: 0, columnspan: 5)
     end
-    fields["name_field"] = TkEntry.new($f3) do
+    fields["name_field"] = TkEntry.new(f3) do
         grid(row:0, column:6, columnspan: 5)
     end
 
-    TkLabel.new($f3) do
+    TkLabel.new(f3) do
         text 'Artist'
         grid(row:1, column: 0, columnspan: 5)
     end
-    fields["artist_field"] = TkEntry.new($f3) do
+    fields["artist_field"] = TkEntry.new(f3) do
         grid(row:1, column:6, columnspan: 5)
     end
 
-    TkLabel.new($f3) do
+    TkLabel.new(f3) do
         text 'Year'
         grid(row:2, column: 0, columnspan: 5)
     end
-    fields["year_field"] = TkEntry.new($f3) do
+    fields["year_field"] = TkEntry.new(f3) do
         grid(row:2, column:6, columnspan: 5)
     end
 
-    TkLabel.new($f3) do
+    TkLabel.new(f3) do
         text 'Genre'
         grid(row:3, column: 0, columnspan: 5)
     end
-    fields["genre_field"] = TkEntry.new($f3) do
+    fields["genre_field"] = TkEntry.new(f3) do
         grid(row:3, column:6, columnspan: 5)
     end
 
-    TkLabel.new($f3) do
+    TkLabel.new(f3) do
         text 'Band?'
         grid(row:4, column: 0, columnspan: 5)
     end
-    fields["band_field"] = TkEntry.new($f3) do
+    fields["band_field"] = TkEntry.new(f3) do
         grid(row:4, column:6, columnspan: 5)
     end
 
-    TkLabel.new($f3) do
+    TkLabel.new(f3) do
         text 'Popular?'
         grid(row:5, column: 0, columnspan: 5)
     end
-    fields["popularity_field"] = TkEntry.new($f3) do
+    fields["popularity_field"] = TkEntry.new(f3) do
         grid(row:5, column:6, columnspan: 5)
     end
 
-    TkLabel.new($f3) do
+    TkLabel.new(f3) do
         text 'Country'
         grid(row:6, column: 0, columnspan: 5)
     end
-    fields["country_field"] = TkEntry.new($f3) do
+    fields["country_field"] = TkEntry.new(f3) do
         grid(row:6, column:6, columnspan: 5)
     end
 
-    TkLabel.new($f3) do
+    TkLabel.new(f3) do
         text 'Duration'
         grid(row:7, column: 0, columnspan: 5)
     end
-    fields["duration_field"] = TkEntry.new($f3) do
+    fields["duration_field"] = TkEntry.new(f3) do
         grid(row:7, column:6, columnspan: 5)
     end
 
-    TkLabel.new($f3) do
+    TkLabel.new(f3) do
         text 'Album'
         grid(row:8, column: 0, columnspan: 5)
     end
-    fields["album_field"] = TkEntry.new($f3) do
+    fields["album_field"] = TkEntry.new(f3) do
         grid(row:8, column:6, columnspan: 5)
     end
 
-    TkLabel.new($f3) do
+    TkLabel.new(f3) do
         text 'Loudness'
         grid(row:9, column: 0, columnspan: 5)
     end
-    fields["loudness_field"] = TkEntry.new($f3) do
+    fields["loudness_field"] = TkEntry.new(f3) do
         grid(row:9, column:6, columnspan: 5)
     end
 
-    TkButton.new($f3) do
+    TkButton.new(f3) do
     text 'Add song'
      command {add_song_if_ok(fields)}
     grid(row:15, column:6, columnspan: 5)
@@ -119,7 +116,6 @@ def showThirdTab(n)
     end
 
     private def add_song_if_ok(fields)
-        db = DatabaseHelper.new()
         new_song = Song.new()
 
         name = fields["name_field"].get
@@ -183,6 +179,6 @@ def showThirdTab(n)
         end
 
         new_song.addAllDetails(name, artist, year, genre, band, popular, country, duration, album, loudness)
-        db.addSongToDB(new_song)
+        $dbHelper.addSongToDB(new_song)
     end
 end
