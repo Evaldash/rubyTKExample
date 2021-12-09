@@ -5,6 +5,11 @@ require_relative 'views/all_songs'
 require_relative 'views/top3_form'
 require_relative 'views/add_song'
 
+def refreshAllSongs(n, f1)
+   emptyTable()
+   showFirstTab(f1)
+end
+
 $dbHelper = DatabaseHelper.new()
 
 #GUI dalis
@@ -20,6 +25,12 @@ end
 
 f1 = TkFrame.new(n)
 n.add f1, :text => 'All songs'
+
+TkButton.new(f1) do
+   text 'Refresh'
+   command {refreshAllSongs(n, f1)}
+   grid(row: 100, column: 0, columnspan: 1)
+end
 
 f2 = TkFrame.new(n)
 n.add f2, :text => 'TOP 3 form'

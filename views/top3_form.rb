@@ -247,8 +247,8 @@ end
        if (song["Loudness"]>3 && params['likes_loud']==1) then song.add_point()
        elsif (song["Loudness"]<=3 && params['likes_loud']==0) then song.add_point() end
  
-       if (params['likes_older']=="true" && song["Year"] <=2000) then song.add_point()
-       elsif (params['likes_older']=="false" && song["Year"] >=2000) then song.add_point() end   
+       if (params['likes_older']=='1' && song["Year"] <=2000) then song.add_point()
+       elsif (params['likes_older']=='0' && song["Year"] >=2000) then song.add_point() end   
        
        minute_before = song["Duration"]-1
        minute_after = song["Duration"]+1
