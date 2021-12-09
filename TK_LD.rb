@@ -1,5 +1,5 @@
 require 'tk'
-require_relative 'databasehelper'
+require_relative 'classes/databasehelper'
 require_relative 'classes/song'
 require_relative 'views/all_songs'
 require_relative 'views/top3_form'
