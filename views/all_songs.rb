@@ -28,4 +28,15 @@ def showFirstTab(n)
             end
         end
     end
+
+    TkButton.new(f1) do
+        text 'Refresh'
+        command {refreshAllSongs()}
+        grid(row: songs.count+1, column: 0, columnspan: 1)
+    end
+
+end
+
+def refreshAllSongs()
+
 end

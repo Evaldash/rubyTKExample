@@ -45,9 +45,6 @@ class DatabaseHelper
     end
 
     def addSongToDB(song)
-        if (!song.hasAllDetails)
-            return "Song is missing details."
-        end
 
         query = "INSERT OR REPLACE INTO Songs (Name, Artist, Year, Genre, Band, Popular, Country, Duration, Album, Loudness)"
         query += "VALUES ('"

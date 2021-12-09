@@ -100,10 +100,6 @@ def showThirdTab(n)
 
     private def is_valid_duration(var)
         time = var.split('.')
-
-        time.each do |part|
-            puts part
-        end
         
         if ( !(var =~ /\A[-+]?[0-9]*\.?[0-9]+\Z/) || time.size!=2 || time[0].to_i<0 || time[1].to_i<0 || time[1].to_i>59)
             return false

@@ -70,9 +70,6 @@ def showSecondTab(n)
         grid(row: 3, column: 2, columnspan: 1)
     end
 
-
-
-
     TkLabel.new(f2) do
         text 'Do you like popular songs?'
         grid(row: 4, column: 0, columnspan: 1, sticky: 'W')
@@ -192,7 +189,7 @@ end
     score_songs(songs, params)
 
     descending  = -1
-    sorted_songs = songs.sort_by {|song| song.points * descending}
+    sorted_songs = songs.sort_by {|song| song["Points"] * descending}
 
     3.times {|i|
         TkLabel.new(f2) do
@@ -213,11 +210,11 @@ end
        if (song["Loudness"]>3 && params['likes_loud']==1) then song.add_point()
        elsif (song["Loudness"]<=3 && params['likes_loud']==0) then song.add_point() end
  
-       if (params['likes_older']=="true" && song.year <=2000) then song.add_point()
-       elsif (params['likes_older']=="false" && song.year >=2000) then song.add_point() end   
+       if (params['likes_older']=="true" && song["Year"] <=2000) then song.add_point()
+       elsif (params['likes_older']=="false" && song["Year"] >=2000) then song.add_point() end   
        
-       @minute_before = song.duration-1
-       @minute_after = song.duration+1
+       @minute_before = song["Duration"]-1
+       @minute_after = song["Duration"]+1
  
        if ((@minute_before...@minute_after).include? params['prefered_length'].to_f) then song.add_point() end            
     }
